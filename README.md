@@ -1,13 +1,18 @@
+![Alt text](/frontend/img/logo.png "AutomEditor logo")
+
 # AutomEditor
 AutoMeditor is an AI based video editor that helps video bloggers to remove bloopers automatically.
 
 ## Instructions
 
 ### Requirements
+
+Install the following software
  - ffmpeg
- - opensmile
+ - OpenSMILE
  - OpenFace
  - python 2 or 3
+Place the OpenSMILE and OpenFace directories at the side of this cloned directory.
  
 ### Data preprocessing
 
@@ -36,6 +41,8 @@ Expose the frontend directory to the web, for instance:
 * cd ./frontend/
 * sudo python -m SimpleSTTPServer 80
 Navigate the URL, for instance: http://localhost
+
+![Alt text](/frontend/img/logo.png "AutomEditor logo")
 
 ### References
 
