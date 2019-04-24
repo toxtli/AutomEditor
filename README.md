@@ -4,22 +4,22 @@ AutoMeditor is an AI based video editor that helps video bloggers to remove bloo
 ## Instructions
 
 ### Requirements
- * ffmpeg
- * opensmile
- * OpenFace
- * python 2 or 3
+ - ffmpeg
+ - opensmile
+ - OpenFace
+ - python 2 or 3
  
 ### Data preprocessing
 
-* Run the scripts in the following order
-** ./backend/feature_extraction/extract_audio_files.py
-** ./backend/feature_extraction/generate_audio_feature.py
-** ./backend/feature_extraction/generate_face_feature.py
-** ./backend/feature_extraction/generate_face_visual.py
-** ./backend/feature_extraction/generate_emotion_feature.py
-** ./backend/feature_extraction/generate_body_feature.py
-** ./backend/feature_extraction/generate_body_visual.py
-* Copy all the .pkl files to the ./backend/data/ folder
+- Run the scripts in the following order
+-- ./backend/feature_extraction/extract_audio_files.py
+-- ./backend/feature_extraction/generate_audio_feature.py
+-- ./backend/feature_extraction/generate_face_feature.py
+-- ./backend/feature_extraction/generate_face_visual.py
+-- ./backend/feature_extraction/generate_emotion_feature.py
+-- ./backend/feature_extraction/generate_body_feature.py
+-- ./backend/feature_extraction/generate_body_visual.py
+- Copy all the .pkl files to the ./backend/data/ folder
 
 ### Training
 
