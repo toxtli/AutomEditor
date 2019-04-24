@@ -42,7 +42,7 @@ Expose the frontend directory to the web, for instance:
 * sudo python -m SimpleSTTPServer 80
 Navigate the URL, for instance: http://localhost
 
-![Alt text](/frontend/img/logo.png "AutomEditor logo")
+![Alt text](/frontend/img/screenshot.png "AutomEditor screenshot")
 
 ### References
 
