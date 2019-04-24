@@ -49,6 +49,6 @@ Expose the frontend directory to the web, for instance:
 * sudo python -m SimpleSTTPServer 80
 Navigate the URL, for instance: http://localhost
 
-### References
+## References
 
 This work is based on this paper: https://arxiv.org/pdf/1805.00625.pdf
