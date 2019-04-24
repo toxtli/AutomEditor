@@ -1,6 +1,6 @@
 // Here goes the python service URL
-//var serverURL = 'data/test.json';
-var serverURL = '//localhost:5000/uploader';
+var serverURL = 'data/test.json';
+//var serverURL = '//localhost:5000/uploader';
 var URL = window.URL || window.webkitURL;
 
 function playSelectedFile(event) {
