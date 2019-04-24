@@ -5,6 +5,11 @@ AutoMeditor is an AI based video editor that helps video bloggers to remove bloo
 
 ## Instructions
 
+### Demo
+
+http://www.carlostoxtli.com/AutomEditor/frontend/
+(You need to link your own backend)
+
 ### Requirements
 
 Install the following software
