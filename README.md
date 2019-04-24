@@ -1,7 +1,7 @@
 ![Alt text](/frontend/img/logo.png "AutomEditor logo")
 
 # AutomEditor
-AutoMeditor is an AI based video editor that helps video bloggers to remove bloopers automatically.
+AutomEditor is an AI based video editor that helps video bloggers to remove bloopers automatically. It uses a multimodal spatio-temporal blooper recognition and localization by using feature fusion from face, body gestures (skelethon), emotions progression, and audio features
 
 ## Instructions
 
