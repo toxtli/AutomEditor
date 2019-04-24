@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<link rel="stylesheet" href="css/index.css">
+	<script src="//code.jquery.com/jquery-3.4.0.min.js"></script>
+</head>
+<body>
+	<img id="logoimg" src="img/logo.png">
+	<video id="videoControl" controls></video>
+	<div id="videobar" hidden></div>
+	<form id="fileinfo" enctype="multipart/form-data" method="post" name="fileinfo">
+		<input id="filename" type="file" accept="video/*" name="filename">
+	</form>
+	<div id="toolBar" hidden>
+		<input id="segment" type="text">
+		<input id="setButton" type="button" value="Set"> 
+	</div>
+	<div id="status" hidden></div>
+	<input id="processButton" type="button" value="Process" hidden>
+	<script src="js/index.js"></script>
+</body>
+</html>

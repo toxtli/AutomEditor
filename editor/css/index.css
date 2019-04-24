@@ -1,0 +1,30 @@
+#videoControl {
+    display: block;
+    width: 480px;
+    height: 320px;
+}
+
+#filename {
+	display: block;
+    width: 100%;       
+}
+
+#videobar {
+	width: 480px;
+	height: 30px;
+	background-color: #AACCFF;
+}
+
+#logoimg {
+	width: 480px;
+}
+
+.frame {
+	display: inline-block;
+	background-color: #DDEEFF;
+	height: 100%;
+}
+
+.selectedFrame {
+	background-color: red;
+}
