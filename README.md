@@ -3,6 +3,8 @@
 # AutomEditor
 AutomEditor is an AI based automatic video editing tool that helps video bloggers to remove bloopers automatically. It uses multimodal spatio-temporal blooper recognition and localization approaches. The models were trained in keras and integrate feature fusion techniques from face, body gestures (skelethon), emotions progression, and audio features.
 
+![Alt text](/frontend/img/img_model.png "AutomEditor diagram")
+
 ## Demo
 
 http://www.carlostoxtli.com/AutomEditor/frontend/
@@ -48,6 +50,10 @@ Expose the frontend directory to the web, for instance:
 * cd ./frontend/
 * sudo python -m SimpleSTTPServer 80
 Navigate the URL, for instance: http://localhost
+
+## Architecture
+
+![Alt text](/frontend/img/img_diagram.png "AutomEditor Architecture")
 
 ## References
 
