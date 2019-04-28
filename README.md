@@ -54,3 +54,5 @@ Navigate the URL, for instance: http://localhost
 This work is based on this paper: https://arxiv.org/pdf/1805.00625.pdf
 
 Slides: https://docs.google.com/presentation/d/12tRjUaMguG13K0kv1rCVgPXmYEKOwZWZSNIW1ba1CZY
+
+Publication in progress ...
