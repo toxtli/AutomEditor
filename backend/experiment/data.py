@@ -46,6 +46,9 @@ class DataSet():
         # where the emotion features are stored, there are two sources
         self.emotion_feature_path = [os.path.join('..', data_folder,'Emotion_Feature.pkl'), #OK
                                      os.path.join('..', data_folder,'Emotion_Feature_Test.pkl')] #OK
+        # where the emotion global are stored, there are two sources
+        self.emotion_global_path = [os.path.join('..', data_folder,'Emotion_Global.pkl'), #OK
+                                     os.path.join('..', data_folder,'Emotion_Global_Test.pkl')] #OK
         # where the visual features are stored, there are two sources
         self.face_feature_path = [os.path.join('..', data_folder,'Face_Feature.pkl'), #OK
                                      os.path.join('..', data_folder,'Face_Feature_Test.pkl')] #OK
@@ -55,6 +58,9 @@ class DataSet():
         # where the audio_feature is stored
         self.audio_feature_path = [os.path.join('..', data_folder, 'Audio_Feature.pkl'),
                                    os.path.join('..', data_folder, 'Audio_Feature_Test.pkl')] #OK
+        # where the audio_feature is stored
+        self.audio_rnn_path = [os.path.join('..', data_folder, 'Audio_Rnn.pkl'),
+                                   os.path.join('..', data_folder, 'Audio_Rnn_Test.pkl')] #OK
 
         # where the body_feature is stored
         self.body_feature_path = [os.path.join('..', data_folder, 'Body_Feature.pkl'), #OK
@@ -217,6 +223,9 @@ class DataSet():
     def load_emotion_feature(self):
         self.emotion_feature = self.unroll_and_normalize(self.load_feature(self.emotion_feature_path))
 
+    def load_emotion_global(self):
+        self.emotion_global = self.unroll_and_normalize(self.load_feature(self.emotion_global_path))
+
     def load_face_feature(self):
         self.face_feature = self.unroll_and_normalize(self.load_feature(self.face_feature_path))
 
@@ -225,6 +234,9 @@ class DataSet():
 
     def load_audio_feature(self):
         self.audio_feature = self.unroll_and_normalize(self.load_feature(self.audio_feature_path))
+
+    def load_audio_rnn(self):
+        self.audio_rnn = self.unroll_and_normalize(self.load_feature(self.audio_rnn_path))
 
     def load_face_fusion(self):
         visual_f_part0 = self.load_feature(self.face_feature_path)
@@ -310,6 +322,15 @@ class DataSet():
         else:
             return utter_feature
 
+    def get_audio_rnn(self, vid, uttr, mode):
+        state_name = mode
+        try:
+            utter_feature = self.audio_rnn[state_name][vid][uttr]
+        except:
+            print("Error when access to "+vid+' '+'utterance_'+uttr+' in audio_rnn!')
+            utter_feature = None
+        return utter_feature
+
     def get_body_feature(self,vid,uttr, mode):
         state_name = mode
         try:
@@ -348,6 +369,16 @@ class DataSet():
             print("Error when access to "+vid+' '+'utterance_'+uttr+' in emotion_feature!')
             utter_feature = None
         return utter_feature
+
+    def get_emotion_global(self,vid,uttr, mode):
+        state_name = mode
+        try:
+            utter_feature = self.emotion_global[state_name][vid][uttr]
+        except:
+            print("Error when access to "+vid+' '+'utterance_'+uttr+' in emotion_global!')
+            return None
+        else:
+            return utter_feature
 
     def get_face_feature(self, vid, uttr, mode):
         state_name = mode
@@ -615,6 +646,21 @@ class DataSet():
                 if self.istrain:
                     y = np.asarray(y)
 
+            elif self.model_type == 'audio_rnn':
+                for vid in videos:
+                    utterances = sorted(main_dict[vid].keys(), key = int)
+                    for uttr in utterances:
+                        b = self.get_audio_rnn(vid, uttr, train_valid_test)
+
+                        if (b is not None) :
+                            x_visual.append(b)
+                            if self.istrain:
+                                y.append(self.get_label(train_valid_test, vid, uttr))
+                            name_list.append([vid, uttr])
+                x =  np.asarray(x_visual)
+                if self.istrain:
+                    y = np.asarray(y)
+
             elif self.model_type == 'bimodal':
                 for vid in videos:
                     utterances = sorted(main_dict[vid].keys(), key = int)
@@ -644,6 +690,21 @@ class DataSet():
                                 y.append(self.get_label(train_valid_test, vid, uttr))
                             name_list.append([vid, uttr])
                 x =  np.asarray(x_visual)
+                if self.istrain:
+                    y = np.asarray(y)
+
+            elif self.model_type == 'emotion_global':
+                for vid in videos:
+                    utterances = sorted(main_dict[vid].keys(), key = int)
+                    for uttr in utterances:
+                        a = self.get_emotion_global(vid, uttr, train_valid_test)
+
+                        if (a is not None) :
+                            x_audio.append(a)
+
+                            y.append(self.get_label(train_valid_test, vid, uttr)) 
+                            name_list.append([vid, uttr])
+                x = np.asarray(x_audio)
                 if self.istrain:
                     y = np.asarray(y)
 

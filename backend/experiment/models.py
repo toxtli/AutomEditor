@@ -24,7 +24,9 @@ class ResearchModels():
                   is_fusion=False, fusion_type='early'):
         # set defaults
         self.audio_feature_f_dim = 1582
+        self.audio_rnn_f_dim = 1582
         self.emotion_feature_f_dim = 35
+        self.emotion_global_f_dim = 35
         self.face_fusion_f_dim = 4805
         self.face_feature_f_dim = 709
         self.face_visual_f_dim = 4096
@@ -51,6 +53,10 @@ class ResearchModels():
                 print("Loading face feature model.")
                 self.input_shape = (seq_length, self.emotion_feature_f_dim)
                 self.model = self.emotion_feature()
+            elif model == 'emotion_global':
+                print("Loading emotion global model.")
+                self.input_shape = (self.emotion_global_f_dim,)
+                self.model = self.emotion_global()
             elif model == 'face_feature':
                 print("Loading face feature model.")
                 self.input_shape = (seq_length, self.face_feature_f_dim)
@@ -79,6 +85,10 @@ class ResearchModels():
                 print("Loading audio model.")
                 self.input_shape = (self.audio_feature_f_dim,)
                 self.model = self.audio_feature()
+            elif model == 'audio_rnn':
+                print("Loading audio rnn model.")
+                self.input_shape = (seq_length, self.audio_rnn_f_dim)
+                self.model = self.audio_rnn()
             elif model == 'word_feature':
                 print("Loading word feature model.")
                 self.input_shape = (self.word_feature_f_dim,)
@@ -204,6 +214,19 @@ class ResearchModels():
         model.add(self.decision_layer('emotion_feature'+rand))
         
         return model
+
+    def emotion_global(self):
+        rand = self.get_random()
+        model = Sequential()
+        # the input layer
+        model.add(BatchNormalization(input_shape = (self.emotion_global_f_dim,), name = 'emotion_global_BN_1'+rand))
+   
+        # add the hidden layer
+        model = self.add_hidden_layer(model,'emotion_global_hidden'+rand)
+
+        #add the decision layer
+        model.add(self.decision_layer('emotion_global'+rand))
+        return  model
 
     def face_feature(self):
         # when input is visual feature
@@ -379,6 +402,28 @@ class ResearchModels():
         #add the decision layer
         model.add(self.decision_layer('audio_feature'+rand))
         return  model
+
+    def audio_rnn(self):
+        # when input is visual feature
+        rand = self.get_random()
+        model = Sequential()
+        model.add(BatchNormalization(input_shape = (self.seq_length, self.audio_rnn_f_dim), name = 'audio_rnn_BN_1'+rand))
+        model.add(AveragePooling1D(pool_size = 2 , name ='audio_rnn_average'+rand))
+        
+        
+        # lstm layer
+        model.add(LSTM(64, name  = 'audio_rnn_lstm'+rand))
+        model.add(Activation('relu', name = 'audio_rnn_activation1'+rand))
+        model.add(BatchNormalization(name ='audio_rnn_BN_2'+rand))
+        model.add(Dropout(0.5, name = 'audio_rnn_dropout_1'+rand))
+        
+        # the hidden layer
+        model = self.add_hidden_layer(model, 'audio_rnn_hidden'+rand)
+        
+        # the decision layer
+        model.add(self.decision_layer('audio_rnn'+rand))
+        
+        return model
        
     def quadmodal_1(self):
         return self.quadmodal_1_early_fusion(self)

@@ -1,5 +1,9 @@
 #sudo apt install ffmpeg
 #python features_from_file.py --model ../experiment/models/fusion_early__face_feature__face_visual__audio_feature.hdf5 --clip te1_3.mp4
+#python features_from_file.py --batch ../Videos/Test  --types audio_rnn
+#python features_from_file.py --sets ../Videos  --types audio_rnn
+#python features_from_file.py --clip ../Videos/Test/video_1/utterance_51.mp4 --types audio_rnn --no_pkl
+#python features_from_file.py --video mientras.mp4 --model ../experiment/models/fusion_early__face_feature__face_visual__audio_feature.hdf5
 
 import gc
 import os
@@ -21,6 +25,7 @@ from tqdm import tqdm
 from numba import cuda
 from subprocess import call
 import matplotlib.pyplot as plt
+from moviepy.editor import VideoFileClip
 
 from keras import backend as K
 from keras.layers import Input, Dense
@@ -42,6 +47,8 @@ body_model = 'pose_body25.caffemodel'
 opensmile_script_path = '../../../opensmile-2.3.0/SMILExtract'
 opensmile_conf = '../../../opensmile-2.3.0/config/emobase2010.conf'
 OpenFace_Extractor_path = '/home/tox/projects/dl/OpenFace/build/bin/FeatureExtraction'
+all_types = ['face_feature', 'face_visual', 'body_feature', 'body_visual', 'audio_feature', 'audio_rnn', 'emotion_feature', 'emotion_global']
+all_states = ['Validation', 'Test', 'Train']
 
 defaults = {
 'frame_size': (224, 224),
@@ -116,12 +123,41 @@ class Extractor():
         gc.collect()
         #K.clear_session()
 
+def get_seq_length_indices(length):
+  if length < seq_length:
+    interval = list(range(length))
+    for i in range(seq_length-length):
+      interval.append(length-1)
+  else:
+    ratio = length//seq_length
+    init_value = length - 1
+    interval = [init_value]
+    for i in range(seq_length-1):
+      init_value -= ratio
+      interval.append(init_value)
+    interval.sort()
+  return interval
+
+def filter_list_to_seq_length(elements):
+    indices = get_seq_length_indices(len(elements))
+    return [elements[index] for index in indices]
+
+def get_video_length(filename):
+    try:
+        clip = VideoFileClip(filename)
+        length = clip.duration
+        clip.reader.close()
+        del clip
+        return length
+    except:
+        return 1
+
 def extract_faces(video_name, video_path):
     #print('EXTRACTING FACES')
     cur_dir = os.getcwd()
     os.chdir(video_path)
     cmd = OpenFace_Extractor_path + ' -f '+ video_name
-    process = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE, stderr= subprocess.STDOUT, universal_newlines=True)
+    process = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE, stderr= subprocess.STDOUT, universal_newlines=True, close_fds=True, bufsize=-1)
     out, err = process.communicate()
     #print(out)
     os.chdir(cur_dir)
@@ -129,22 +165,57 @@ def extract_faces(video_name, video_path):
 def extract_audio(video_file, audio_path, audio_file):
     #print('\nEXTRACTING AUDIO')
     #process1 = subprocess.call(['ffmpeg', '-i', video_file, '-vn', audio_file]) # extract audio file from video file"""
-    process = subprocess.Popen(['ffmpeg', '-i', video_file, '-vn', audio_file],stdout=subprocess.PIPE, stderr= subprocess.STDOUT)
+    video_length = get_video_length(video_file)
+    #print('VIDEO_LENGTH', video_length)
+    process = subprocess.Popen(['ffmpeg', '-i', video_file, '-vn', audio_file],stdout=subprocess.PIPE, stderr= subprocess.STDOUT, close_fds=True, bufsize=-1)
     out, err = process.communicate()
-    audio_interval = 1/seq_length # seconds
+    audio_interval = video_length/seq_length # seconds
+    if audio_interval < 0.1:
+      audio_interval = 0.1
+    #print('INTERVAL', audio_interval)
     audio_frames_path = os.path.join(audio_path, 'frames')
     os.makedirs(audio_frames_path)
     frame_files = os.path.join(audio_frames_path, 'out%04d.wav')
     #process2 = subprocess.call(['ffmpeg', '-i', video_file, '-f','segment','-segment_time', str(audio_interval), frame_files])
-    process = subprocess.Popen(['ffmpeg', '-i', video_file, '-f','segment','-segment_time', str(audio_interval), frame_files],stdout=subprocess.PIPE, stderr= subprocess.STDOUT)
+    process = subprocess.Popen(['ffmpeg', '-i', video_file, '-f','segment','-segment_time', str(audio_interval), frame_files],stdout=subprocess.PIPE, stderr= subprocess.STDOUT, close_fds=True, bufsize=-1)
     out, err = process.communicate()
 
 def extract_audio_features(audio_file, audio_feature_file):
     cmd = opensmile_script_path + ' -C ' + opensmile_conf + ' -I ' + audio_file +' -O '+ audio_feature_file
     #print(cmd)
-    process = subprocess.Popen(cmd.split(),stdout=subprocess.PIPE, stderr= subprocess.STDOUT)
+    #subprocess.check_call(cmd.split(), stdout=subprocess.PIPE, stderr= subprocess.STDOUT)
+    process = subprocess.Popen(cmd.split(),stdout=subprocess.PIPE, stderr= subprocess.STDOUT, close_fds=True, bufsize=-1)
     out, err = process.communicate()
+    #process.wait()
     #print(out)
+
+def audio_features_integrity_check(features):
+    for i, feature in enumerate(features):
+        if type(feature) == str:
+            if i == 0:
+                features[i] = features[i + 1]
+            else:
+                features[i] = features[i - 1]
+    return features
+
+def extract_audio_rnn(audio_path):
+    output = []
+    audio_frames_path = os.path.join(audio_path, 'frames')
+    audio_features_path = os.path.join(audio_path, 'features')
+    if not os.path.exists(audio_features_path):
+        os.makedirs(audio_features_path)
+    audio_files = glob.glob(os.path.join(audio_frames_path, '*'))
+    #print('FILES', len(audio_files))
+    audio_files = filter_list_to_seq_length(audio_files)
+    #print('FILES_FIX', len(audio_files))
+    for i, audio_file in enumerate(audio_files):
+        audio_features_file = os.path.join(audio_features_path, '%s.txt' % i)
+        extract_audio_features(audio_file, audio_features_file)
+        features = extract_audio_features_from_txt(audio_features_file)
+        #print(features)
+        output.append(features)
+    output = audio_features_integrity_check(output)
+    return np.asarray(output)
 
 def clean_audio_data(data):
     data = data.split(',')[1:] #'noname' deleted
@@ -594,6 +665,26 @@ def get_emotion_features(image):
   features = np.append(features, out6)
   return features
 
+def extract_emotion_global(features):
+  output = []
+  num_models = 5
+  num_features = 7
+  values = np.zeros(num_features*num_models)
+  for feature in features:
+    for i in range(num_models):
+      num_init = i * num_features
+      num_end = num_init + num_features
+      index = np.argmax(feature[num_init:num_end])
+      values[num_init+index] += 1
+  for i in range(num_models):
+    num_init = i * num_features
+    num_end = num_init + num_features
+    subset = values[num_init:num_end]
+    ref = sum(subset)
+    subset = [float(i)/ref for i in subset]
+    output += subset
+  return output
+
 def extract_emotion_features(video_path):
   #print('EXTRACTING EMOTIONS')
   output = []
@@ -611,42 +702,6 @@ def extract_emotion_features(video_path):
     features = get_emotion_features(image)
     output.append(features)
   return np.asarray(output)
-
-def extract_features(filename):
-  features = {}
-  if os.path.exists(filename):
-    uid = str(uuid.uuid1())
-    vid_path = os.path.join(videos_path, uid)
-    audio_path = os.path.join(vid_path, 'audio')
-    body_path = os.path.join(vid_path, 'body')
-    body_visual_path = os.path.join(body_path, 'skelethon')
-    os.makedirs(vid_path)
-    os.makedirs(audio_path)
-    os.makedirs(body_visual_path)
-    video_name = 'vid.mp4'
-    video_file = os.path.join(vid_path, video_name)
-    audio_file = os.path.join(audio_path, 'audio.wav')
-    audio_feature_file = os.path.join(audio_path, 'audio.txt')
-    body_feature_file = os.path.join(body_path, 'body.json')
-    shutil.copyfile(filename, video_file)
-    extract_audio(video_file, audio_path, audio_file)
-    extract_audio_features(audio_file, audio_feature_file)
-    features['audio_feature'] = extract_audio_features_from_txt(audio_feature_file)
-    extract_faces(video_name, vid_path)
-    features['face_feature'] = extract_face_features(vid_path)
-    extract_body(video_file, body_visual_path, body_feature_file)
-    features['body_feature'] = extract_body_features(body_feature_file)
-    #print(features['body_feature'].shape, features['body_visual'].shape)
-    features['emotion_feature'] = extract_emotion_features(vid_path)
-    features['face_visual'] = extract_face_visual(vid_path)
-    features['body_visual'] = extract_body_visual(body_visual_path)
-    features['face_fusion'] = np.concatenate((features['face_feature'], features['face_visual']), axis = -1)
-    features['body_fusion'] = np.concatenate((features['body_feature'], features['body_visual']), axis = -1)
-    #print(features)
-    delete_directory(vid_path)
-  else:
-    print('Provide a valid filename.')
-  return features
 
 def delete_directory(vid_path):
     shutil.rmtree(vid_path)
@@ -718,6 +773,16 @@ def get_model_components(model_path, features):
         components.append(model_component)
   return components
 
+def get_types_from_model(model_path):
+  components = []
+  model_file_name = model_path.split('/')[-1]
+  model_name = model_file_name.split('.')[0]
+  model_components = model_name.split('__')
+  for model_component in model_components:
+    if model_component in all_types:
+        components.append(model_component)
+  return components
+
 def get_X(features, model_components, scalers=None, normalize=True):
   X = []
   for model_component in model_components:
@@ -750,26 +815,28 @@ def get_X_all(features, model_components, scalers=None, normalize=True):
     start = False
   return X_all
 
-def get_clip_features(file_path):
+def get_clip_features(file_path, types=None, store_pkl=True):
     features = []
     filename = file_path.split('/')[-1]
     pkl_path = filename + '.pkl'
     if os.path.exists(pkl_path):
         features = pickle.load(open(pkl_path, 'rb'))
     else:
-        features = extract_features(file_path)
-        pickle.dump(features, open(pkl_path, 'wb'), 2)
+        features = extract_features(file_path, types)
+        if store_pkl:
+            pickle.dump(features, open(pkl_path, 'wb'), 2)
     return features
 
-def get_video_features(file_path):
+def get_video_features(file_path, types=None, store_pkl=True):
     features = []
     filename = file_path.split('/')[-1]
     pkl_path = filename + '.all.pkl'
     if os.path.exists(pkl_path):
         features = pickle.load(open(pkl_path, 'rb'))
     else:
-        features = extract_video_features(file_path)
-        pickle.dump(features, open(pkl_path, 'wb'), 2)
+        features = extract_video_features(file_path, types)
+        if store_pkl:
+            pickle.dump(features, open(pkl_path, 'wb'), 2)
     return features
 
 def predict_values(features, model_path, loaded_model=None):
@@ -812,12 +879,12 @@ def split_video_into_clips(file_path, output_path, parts_per_second, chunk_lengt
         cmd1 = 'ffmpeg -ss 00:00:0{:.3f} -noaccurate_seek -i {} -c copy -ss 00:00:0{:.3f} -reset_timestamps 1 {}'.format(time_init, file_path, time_init, tmp_video)
         #subprocess.call(cmd1.split())
         #print(cmd1)
-        process = subprocess.Popen(cmd1.split(),stdout=subprocess.PIPE, stderr= subprocess.STDOUT)
+        process = subprocess.Popen(cmd1.split(),stdout=subprocess.PIPE, stderr= subprocess.STDOUT, close_fds=True, bufsize=-1)
         out, err = process.communicate()
         cmd2 = 'ffmpeg -i {} -c copy -segment_time 00:00:{:02d} -f segment -reset_timestamps 1 {}'.format(tmp_video, chunk_length, files_path)
         #subprocess.call(cmd2.split())
         #print(cmd2)
-        process = subprocess.Popen(cmd2.split(),stdout=subprocess.PIPE, stderr= subprocess.STDOUT)
+        process = subprocess.Popen(cmd2.split(),stdout=subprocess.PIPE, stderr= subprocess.STDOUT, close_fds=True, bufsize=-1)
         out, err = process.communicate()
         files = glob.glob(os.path.join(segments_path, '*'))
         files.sort()
@@ -831,7 +898,7 @@ def split_video_into_clips(file_path, output_path, parts_per_second, chunk_lengt
     chunks = glob.glob(os.path.join(chunks_path, '*'))
     return chunks
 
-def extract_video_features(file_path):
+def extract_video_features(file_path, types=None):
     features = []
     uid = str(uuid.uuid1())
     vid_path = os.path.join(videos_path, uid)
@@ -840,7 +907,7 @@ def extract_video_features(file_path):
         os.makedirs(vid_path)
     clip_paths = split_video_into_clips(file_path, vid_path, 2, 1)
     for clip_path in tqdm(clip_paths):
-        feature = extract_features(clip_path)
+        feature = extract_features(clip_path, types)
         features.append(feature)
         free_memory()
     delete_directory(vid_path)
@@ -952,29 +1019,175 @@ def predict_and_analyze(features, model_path, clips_per_second, loaded_model=Non
     results = bin_values(predictions)
     return analyze_results(results, clips_per_second, plot=False)
 
+def store_sets_features(sets_dir, types, states):
+    for state in states:
+        set_dir = os.path.join(sets_dir, state)
+        features = get_batch_features(set_dir, types)
+        features_per_type = get_features_per_type(features, types)
+        for type_name in types:
+            capitalized_name = get_capitalized_name(type_name)
+            set_name = '%s_%s.pkl' % (capitalized_name, state)
+            pickle.dump(features_per_type[type_name], open(set_name, 'wb'), 2)
+    for type_name in types:
+        capitalized_name = get_capitalized_name(type_name)
+        join_files(capitalized_name)
+
+def join_files(name):
+    path_train = '%s_Train.pkl' % name
+    path_validation = '%s_Validation.pkl' % name
+    if os.path.exists(path_train) and os.path.exists(path_validation):
+        output = {}
+        path_file = '%s.pkl' % name
+        output['Train'] = pickle.load(open(path_train, 'rb'))
+        output['Validation'] = pickle.load(open(path_validation, 'rb'))
+        pickle.dump(output, open(path_file, 'wb'), 2)
+
+def get_capitalized_name(name):
+    return name.replace('_', ' ').title().replace(' ', '_')
+
+def get_features_per_type(features, types):
+    output = {}
+    for type_name in types:
+        output[type_name] = {}
+        for video in features:
+            output[type_name][video] = {}
+            for uttr in features[video]:
+                output[type_name][video][uttr] = features[video][uttr][type_name]
+    return output
+
+def get_batch_features(batch_dir, types):
+  batch_dict = {}
+  videos = glob.glob(os.path.join(batch_dir, '*'))
+  for video in videos:
+    video_name = video.split('/')[-1]
+    if video_name not in batch_dict:
+      batch_dict[video_name] = {}
+    utterance_videos = glob.glob(os.path.join(video, '*.mp4'))
+    for uttr in tqdm(utterance_videos):
+      #print(uttr)
+      uttr_index = uttr.split('/')[-1].split('.')[0].split('_')[1]
+      batch_dict[video_name][uttr_index] = get_clip_features(uttr, types, store_pkl=False)
+  return batch_dict
+
+def save_batch_pickles(batch_dir, features, types, store_pkl=True):
+    batch_name = batch_dir.replace('../', '').replace('/','_')
+    if store_pkl:
+        batch_file = '%s.pkl' % batch_name
+        pickle.dump(features, open(batch_file, 'wb'), 2)
+    features_per_type = get_features_per_type(features, types)
+    for type_name in types:
+        capitalized_name = get_capitalized_name(type_name)
+        batch_file = '%s_%s.pkl' % (capitalized_name, batch_name)
+        pickle.dump(features_per_type[type_name], open(batch_file, 'wb'), 2)
+
+def extract_features(filename, types=None):
+  features = {}
+  if types is None:
+    types = all_types
+  if os.path.exists(filename):
+    uid = str(uuid.uuid1())
+    vid_path = os.path.join(videos_path, uid)
+    audio_path = os.path.join(vid_path, 'audio')
+    body_path = os.path.join(vid_path, 'body')
+    body_visual_path = os.path.join(body_path, 'skelethon')
+    os.makedirs(vid_path)
+    os.makedirs(audio_path)
+    os.makedirs(body_visual_path)
+    video_name = 'vid.mp4'
+    video_file = os.path.join(vid_path, video_name)
+    audio_file = os.path.join(audio_path, 'audio.wav')
+    audio_feature_file = os.path.join(audio_path, 'audio.txt')
+    body_feature_file = os.path.join(body_path, 'body.json')
+    shutil.copyfile(filename, video_file)
+    if 'audio_feature' in types or 'audio_rnn' in types:
+        extract_audio(video_file, audio_path, audio_file)
+    if 'audio_feature' in types:
+        extract_audio_features(audio_file, audio_feature_file)
+        features['audio_feature'] = extract_audio_features_from_txt(audio_feature_file)
+    if 'audio_rnn' in types:
+        features['audio_rnn'] = extract_audio_rnn(audio_path)
+        #print('AUDIO_RNN', features['audio_rnn'].shape)
+    if 'face_feature' in types or 'face_visual' in types:
+        extract_faces(video_name, vid_path)
+    if 'face_feature' in types:
+        features['face_feature'] = extract_face_features(vid_path)
+    if 'body_feature' in types or 'body_visual' in types:
+        extract_body(video_file, body_visual_path, body_feature_file)
+    if 'body_feature' in types:
+        features['body_feature'] = extract_body_features(body_feature_file)
+        #print(features['body_feature'].shape, features['body_visual'].shape)
+    if 'emotion_feature' in types:
+        features['emotion_feature'] = extract_emotion_features(vid_path)
+    if 'emotion_global' in types:
+        if not ('face_feature' in types or 'face_visual' in types):
+            extract_faces(video_name, vid_path)
+        if 'emotion_feature' in types:
+            emotion_features = features['emotion_feature']
+        else:
+            emotion_features = extract_emotion_features(vid_path)
+        features['emotion_global'] = extract_emotion_global(emotion_features)
+        #print('emotion_global', features['emotion_global'])
+    if 'face_visual' in types:
+        features['face_visual'] = extract_face_visual(vid_path)
+    if 'body_visual' in types:
+        features['body_visual'] = extract_body_visual(body_visual_path)
+    if 'face_feature' in types or 'face_visual' in types:
+        features['face_fusion'] = np.concatenate((features['face_feature'], features['face_visual']), axis = -1)
+    if 'body_feature' in types or 'body_visual' in types:
+        features['body_fusion'] = np.concatenate((features['body_feature'], features['body_visual']), axis = -1)
+    #print(features)
+    delete_directory(vid_path)
+  else:
+    print('Provide a valid filename.')
+  return features
+
 if __name__ == '__main__':
   parser = argparse.ArgumentParser(description='This script is used to extract the features from a file.')
+  parser.add_argument('--types', default=None, help="Features types separated by commas.")
+  parser.add_argument('--sets', default=None, help="Video sets directory path.")
+  parser.add_argument('--batch', default=None, help="Video directory path.")
   parser.add_argument('--clip', default=None, help="Video clip path.")
   parser.add_argument('--video', default=None, help="Full video path.")
   parser.add_argument('--features', default=None, help="Features path.")
   parser.add_argument('--model', default=None, help="Model path.")
   parser.add_argument('--clips_per_second', default=2, type=int, help="Model path.")
   parser.add_argument('--clip_length', default=2, type=int, help="Model path.")
+  parser.add_argument('--no_pkl', action='store_true', help="Prevet to store the model.")
+  parser.add_argument('--join', default=None, help="Join set files.")
+  parser.add_argument('--states', default=None, help="Train, Test, or Validation.")
   args = parser.parse_args()
   model_path = args.model
   clips_per_second = args.clips_per_second
   clip_length = args.clip_length
   features = []
-  if args.clip is not None:
-    features = [get_clip_features(args.clip)]
-  elif args.video is not None:
-    #mem_setup()
-    features = get_video_features(args.video)
-  elif args.features is not None:
-    #mem_setup()
-    if os.path.exists(args.features):
+  store_model = not args.no_pkl
+  types = all_types
+  states = all_states
+  if args.types is not None:
+    types = args.types.split(',')
+  if args.states is not None:
+    states = args.states.split(',')
+  if args.join is not None:
+    join_files(args.join)
+  if args.sets is not None:
+    store_sets_features(args.sets, types, states)
+  elif args.batch is not None:
+    features = get_batch_features(args.batch, types)
+    save_batch_pickles(args.batch, features, types)
+  else:
+    if model_path is not None:
+      types = get_types_from_model(model_path)
+    if args.clip is not None:
+      features = [get_clip_features(args.clip, types, store_model)]
+      print(features)
+    elif args.video is not None:
+      #mem_setup()
+      features = get_video_features(args.video, types, store_model)
+    elif args.features is not None:
+      #mem_setup()
+      if os.path.exists(args.features):
         features = pickle.load(open(args.features, 'rb'))
-  if model_path is not None:
-    predictions = predict_values(features, model_path)
-    results = bin_values(predictions)
-    analyze_results(results, clips_per_second, plot=True)
+    if model_path is not None:
+      predictions = predict_values(features, model_path)
+      results = bin_values(predictions)
+      analyze_results(results, clips_per_second, plot=True)
