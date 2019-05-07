@@ -27,7 +27,7 @@ functions == 0.7.0
 
 # experiment/test.py: 4
 # experiment/train.py: 9
-hematopy == 0.0.1.dev6
+# hematopy == 0.0.1.dev6
 
 # experiment/test.py: 4
 # experiment/train.py: 9
