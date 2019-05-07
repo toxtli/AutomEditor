@@ -185,6 +185,8 @@ def extract_audio_features(audio_file, audio_feature_file):
     cmd = opensmile_script_path + ' -C ' + opensmile_conf + ' -I ' + audio_file +' -O '+ audio_feature_file
     #print(cmd)
     #subprocess.check_call(cmd.split(), stdout=subprocess.PIPE, stderr= subprocess.STDOUT)
+    if debug:
+        print(cmd)
     process = subprocess.Popen(cmd.split(),stdout=subprocess.PIPE, stderr= subprocess.STDOUT, close_fds=True, bufsize=-1)
     out, err = process.communicate()
     if debug:
