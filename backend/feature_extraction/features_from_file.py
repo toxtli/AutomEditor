@@ -39,7 +39,7 @@ from keras.applications.resnet50 import preprocess_input as res_preprocess
 from sklearn.preprocessing import MinMaxScaler
 #%matplotlib inline
 
-debug = True
+debug = False
 seq_length = 20
 videos_path = 'vids'
 data_path = '../data'
@@ -47,7 +47,7 @@ body_proto = 'pose_body25.prototxt'
 body_model = 'pose_body25.caffemodel'
 opensmile_script_path = '../../../opensmile/SMILExtract'
 opensmile_conf = '../../../opensmile/config/emobase2010.conf'
-OpenFace_Extractor_path = '/content/OpenFace/build/bin/FeatureExtraction'
+OpenFace_Extractor_path = '../../../../../OpenFace/build/bin/FeatureExtraction'
 all_types = ['face_feature', 'face_visual', 'body_feature', 'body_visual', 'audio_feature', 'audio_rnn', 'emotion_feature', 'emotion_global']
 all_states = ['Validation', 'Test', 'Train']
 
