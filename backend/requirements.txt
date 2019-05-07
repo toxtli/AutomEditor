@@ -38,6 +38,10 @@ indras-net == 2.0.6
 # experiment/functions.py: 2
 # experiment/models.py: 12,13
 # experiment/test.py: 1,2,3
+
+GPUtil
+numba
+moviepy
 # experiment/train.py: 6,7,8
 # feature_extraction/features_from_file.py: 20,21,22
 # feature_extraction/generate_body_visual.py: 4,5,16
