@@ -188,3 +188,7 @@ utils == 0.9.0
 # experiment/test.py: 4
 # experiment/train.py: 9
 # visvmtagger
+
+GPUtil
+numba
+moviepy
