@@ -1,4 +1,4 @@
-FROM ubuntu:latest
+FROM nvidia/cuda:10.1-base
 MAINTAINER Carlos Toxtli (ctoxtli@gmail.com)
 ENV DEBIAN_FRONTEND=noninteractive
 RUN mkdir /content
