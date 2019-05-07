@@ -39,6 +39,7 @@ from keras.applications.resnet50 import preprocess_input as res_preprocess
 from sklearn.preprocessing import MinMaxScaler
 #%matplotlib inline
 
+debug = True
 seq_length = 20
 videos_path = 'vids'
 data_path = '../data'
@@ -186,8 +187,9 @@ def extract_audio_features(audio_file, audio_feature_file):
     #subprocess.check_call(cmd.split(), stdout=subprocess.PIPE, stderr= subprocess.STDOUT)
     process = subprocess.Popen(cmd.split(),stdout=subprocess.PIPE, stderr= subprocess.STDOUT, close_fds=True, bufsize=-1)
     out, err = process.communicate()
+    if debug:
+        print(out)
     #process.wait()
-    #print(out)
 
 def audio_features_integrity_check(features):
     for i, feature in enumerate(features):
@@ -581,7 +583,7 @@ def process_image(cap, net, show=False, store=None, images=False, calc_features=
 
 def extract_body(video_file, body_visual_path, body_feature_file):
   #print('EXTRACTING BODY')
-  net = cv2.dnn.readNet(cv2.samples.findFile(body_proto), cv2.samples.findFile(body_model))
+  net = cv2.dnn.readNet(body_proto, body_model)
   net.setPreferableTarget(cv2.dnn.DNN_TARGET_OPENCL)
   cap = cv2.VideoCapture(video_file)
   points = process_image(cap, net, store=body_visual_path, images=True, calc_features=False, save_images=True)
