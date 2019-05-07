@@ -27,10 +27,12 @@ RUN pip install git+https://github.com/rcmalli/keras-vggface.git
 WORKDIR /content/AutomEditor/backend
 RUN pip install -r requirements.txt
 WORKDIR /content/AutomEditor/backend/feature_extraction
-RUN python features_from_file.py --sets ../../videos
-WORKDIR /content
-CMD ["date"]
-EXPOSE 80
+ENTRYPOINT ["python", "features_from_file.py"]
+CMD ["--sets", "../../videos"]
+#RUN python features_from_file.py --sets ../../videos
+#WORKDIR /content
+#CMD ["date"]
+#EXPOSE 80
 #RUN apt-get install -y nginx
 #ENTRYPOINT ["/usr/sbin/nginx","-g","daemon off;"]
 #ENTRYPOINT ["/bin/cat"]
