@@ -27,8 +27,8 @@ RUN pip install git+https://github.com/rcmalli/keras-vggface.git
 WORKDIR /content/AutomEditor/backend
 RUN pip install -r requirements.txt
 WORKDIR /content/AutomEditor/backend/feature_extraction
-ENTRYPOINT ["python", "features_from_file.py"]
-CMD ["--sets", "../../videos"]
+CMD ["python", "features_from_file.py", "--sets", "../../videos"]
+#ENTRYPOINT ["python", "features_from_file.py"]
 #RUN python features_from_file.py --sets ../../videos
 #WORKDIR /content
 #CMD ["date"]

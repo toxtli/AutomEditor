@@ -159,7 +159,7 @@ scipy == 1.2.1
 # experiment/test.py: 6
 # experiment/train.py: 11
 # feature_extraction/generate_emotion_feature.py: 14
-tensorflow == 1.13.1
+tensorflow-gpu
 
 # experiment/batch_renorm.py: 15
 theano == 1.0.4
