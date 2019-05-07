@@ -45,9 +45,9 @@ videos_path = 'vids'
 data_path = '../data'
 body_proto = 'pose_body25.prototxt'
 body_model = 'pose_body25.caffemodel'
-opensmile_script_path = '../../../opensmile-2.3.0/SMILExtract'
-opensmile_conf = '../../../opensmile-2.3.0/config/emobase2010.conf'
-OpenFace_Extractor_path = '/home/tox/projects/dl/OpenFace/build/bin/FeatureExtraction'
+opensmile_script_path = '../../../opensmile/SMILExtract'
+opensmile_conf = '../../../opensmile/config/emobase2010.conf'
+OpenFace_Extractor_path = '/content/OpenFace/build/bin/FeatureExtraction'
 all_types = ['face_feature', 'face_visual', 'body_feature', 'body_visual', 'audio_feature', 'audio_rnn', 'emotion_feature', 'emotion_global']
 all_states = ['Validation', 'Test', 'Train']
 
