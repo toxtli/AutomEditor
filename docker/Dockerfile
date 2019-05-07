@@ -25,7 +25,7 @@ RUN git clone https://github.com/toxtli/AutomEditor.git
 RUN pip install opencv-python --upgrade
 RUN pip install git+https://github.com/rcmalli/keras-vggface.git
 WORKDIR /content/AutomEditor/backend
-RUN git pip install -r requirements.txt
+RUN pip install -r requirements.txt
 WORKDIR /content/AutomEditor/backend/feature_extraction
 RUN python features_from_file.py --sets ../../videos
 WORKDIR /content
