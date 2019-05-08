@@ -1,0 +1,67 @@
+EmotionMaxVote,arousal,file_path,orig_path,utterance,valence,video
+0,0,../Videos/Test/video_1/utterance_0.mp4,../../videos/okay/fun/0904/Clip 3.mp4,utterance_0.mp4,0,video_1
+0,0,../Videos/Test/video_1/utterance_1.mp4,../../videos/okay/craft/0101/Clip 5.mp4,utterance_1.mp4,0,video_1
+0,0,../Videos/Test/video_1/utterance_2.mp4,../../videos/okay/craft/0101/Clip 25.mp4,utterance_2.mp4,0,video_1
+0,0,../Videos/Test/video_1/utterance_3.mp4,../../videos/okay/mientras/2911/Clip 3.mp4,utterance_3.mp4,0,video_1
+0,0,../Videos/Test/video_1/utterance_4.mp4,../../videos/okay/mientras/0502/Clip 3.mp4,utterance_4.mp4,0,video_1
+0,0,../Videos/Test/video_1/utterance_5.mp4,../../videos/okay/mientras/2801/Clip 3.mp4,utterance_5.mp4,0,video_1
+0,0,../Videos/Test/video_1/utterance_6.mp4,../../videos/okay/mientras/1403/Clip 2.mp4,utterance_6.mp4,0,video_1
+0,0,../Videos/Test/video_1/utterance_7.mp4,../../videos/okay/mientras/3101/Clip 3.mp4,utterance_7.mp4,0,video_1
+0,0,../Videos/Test/video_1/utterance_8.mp4,../../videos/okay/mientras/0304/Clip 5.mp4,utterance_8.mp4,0,video_1
+0,0,../Videos/Test/video_1/utterance_9.mp4,../../videos/okay/mientras/0304/Clip 25.mp4,utterance_9.mp4,0,video_1
+0,0,../Videos/Test/video_1/utterance_10.mp4,../../videos/okay/mientras/0404/Clip 70.mp4,utterance_10.mp4,0,video_1
+0,0,../Videos/Test/video_1/utterance_11.mp4,../../videos/okay/mientras/0404/Clip 51.mp4,utterance_11.mp4,0,video_1
+0,0,../Videos/Test/video_1/utterance_12.mp4,../../videos/okay/mientras/0404/Clip 46.mp4,utterance_12.mp4,0,video_1
+0,0,../Videos/Test/video_1/utterance_13.mp4,../../videos/okay/mientras/0404/Clip 9.mp4,utterance_13.mp4,0,video_1
+0,0,../Videos/Test/video_1/utterance_14.mp4,../../videos/okay/mientras/0404/Clip 24.mp4,utterance_14.mp4,0,video_1
+0,0,../Videos/Test/video_1/utterance_15.mp4,../../videos/okay/mientras/0404/Clip 49.mp4,utterance_15.mp4,0,video_1
+0,0,../Videos/Test/video_1/utterance_16.mp4,../../videos/okay/mientras/0404/Clip 74.mp4,utterance_16.mp4,0,video_1
+0,0,../Videos/Test/video_1/utterance_17.mp4,../../videos/okay/mientras/0403/Clip 2.mp4,utterance_17.mp4,0,video_1
+0,0,../Videos/Test/video_1/utterance_18.mp4,../../videos/okay/mientras/2401/Clip 3.mp4,utterance_18.mp4,0,video_1
+0,0,../Videos/Test/video_1/utterance_19.mp4,../../videos/okay/mientras/0703/Clip 3.mp4,utterance_19.mp4,0,video_1
+0,0,../Videos/Test/video_1/utterance_20.mp4,../../videos/okay/mientras/1103/Clip 3.mp4,utterance_20.mp4,0,video_1
+0,0,../Videos/Test/video_1/utterance_21.mp4,../../videos/okay/mientras/0804/Clip 32.mp4,utterance_21.mp4,0,video_1
+0,0,../Videos/Test/video_1/utterance_22.mp4,../../videos/okay/mientras/0804/Clip 25.mp4,utterance_22.mp4,0,video_1
+0,0,../Videos/Test/video_1/utterance_23.mp4,../../videos/okay/mientras/0804/Clip 51.mp4,utterance_23.mp4,0,video_1
+0,0,../Videos/Test/video_1/utterance_24.mp4,../../videos/okay/mientras/0804/Clip 46.mp4,utterance_24.mp4,0,video_1
+0,0,../Videos/Test/video_1/utterance_25.mp4,../../videos/okay/mientras/0804/Clip 9.mp4,utterance_25.mp4,0,video_1
+0,0,../Videos/Test/video_1/utterance_26.mp4,../../videos/okay/pulso/2502/Clip 3.mp4,utterance_26.mp4,0,video_1
+0,0,../Videos/Test/video_1/utterance_27.mp4,../../videos/okay/pulso/1403/Clip 3.mp4,utterance_27.mp4,0,video_1
+0,0,../Videos/Test/video_1/utterance_28.mp4,../../videos/okay/pulso/1510/Clip 3.mp4,utterance_28.mp4,0,video_1
+0,0,../Videos/Test/video_1/utterance_29.mp4,../../videos/okay/pulso/2101/Clip 3.mp4,utterance_29.mp4,0,video_1
+0,0,../Videos/Test/video_1/utterance_30.mp4,../../videos/okay/pulso/0403/Clip 3.mp4,utterance_30.mp4,0,video_1
+0,0,../Videos/Test/video_1/utterance_31.mp4,../../videos/okay/pulso/1207/Clip 3.mp4,utterance_31.mp4,0,video_1
+0,0,../Videos/Test/video_1/utterance_32.mp4,../../videos/okay/pulso/0703/Clip 3.mp4,utterance_32.mp4,0,video_1
+1,0,../Videos/Test/video_1/utterance_33.mp4,../../videos/blooper/fun/0904/Clip 3.mp4,utterance_33.mp4,0,video_1
+1,0,../Videos/Test/video_1/utterance_34.mp4,../../videos/blooper/craft/0101/15.mp4,utterance_34.mp4,0,video_1
+1,0,../Videos/Test/video_1/utterance_35.mp4,../../videos/blooper/craft/0101/22.mp4,utterance_35.mp4,0,video_1
+1,0,../Videos/Test/video_1/utterance_36.mp4,../../videos/blooper/craft/0101/5.mp4,utterance_36.mp4,0,video_1
+1,0,../Videos/Test/video_1/utterance_37.mp4,../../videos/blooper/mientras/1802/Clip 3.mp4,utterance_37.mp4,0,video_1
+1,0,../Videos/Test/video_1/utterance_38.mp4,../../videos/blooper/mientras/2502/Clip 3.mp4,utterance_38.mp4,0,video_1
+1,0,../Videos/Test/video_1/utterance_39.mp4,../../videos/blooper/mientras/1803/Clip 2.mp4,utterance_39.mp4,0,video_1
+1,0,../Videos/Test/video_1/utterance_40.mp4,../../videos/blooper/mientras/1402/Clip 3.mp4,utterance_40.mp4,0,video_1
+1,0,../Videos/Test/video_1/utterance_41.mp4,../../videos/blooper/mientras/1403/Clip 2.mp4,utterance_41.mp4,0,video_1
+1,0,../Videos/Test/video_1/utterance_42.mp4,../../videos/blooper/mientras/0304/Clip 5.mp4,utterance_42.mp4,0,video_1
+1,0,../Videos/Test/video_1/utterance_43.mp4,../../videos/blooper/mientras/0304/Clip 25.mp4,utterance_43.mp4,0,video_1
+1,0,../Videos/Test/video_1/utterance_44.mp4,../../videos/blooper/mientras/1102/Clip 3.mp4,utterance_44.mp4,0,video_1
+1,0,../Videos/Test/video_1/utterance_45.mp4,../../videos/blooper/mientras/0404/Clip 25.mp4,utterance_45.mp4,0,video_1
+1,0,../Videos/Test/video_1/utterance_46.mp4,../../videos/blooper/mientras/0404/Clip 51.mp4,utterance_46.mp4,0,video_1
+1,0,../Videos/Test/video_1/utterance_47.mp4,../../videos/blooper/mientras/0404/Clip 46.mp4,utterance_47.mp4,0,video_1
+1,0,../Videos/Test/video_1/utterance_48.mp4,../../videos/blooper/mientras/0404/Clip 9.mp4,utterance_48.mp4,0,video_1
+1,0,../Videos/Test/video_1/utterance_49.mp4,../../videos/blooper/mientras/0404/Clip 24.mp4,utterance_49.mp4,0,video_1
+1,0,../Videos/Test/video_1/utterance_50.mp4,../../videos/blooper/mientras/0404/Clip 49.mp4,utterance_50.mp4,0,video_1
+1,0,../Videos/Test/video_1/utterance_51.mp4,../../videos/blooper/mientras/0403/Clip 3.mp4,utterance_51.mp4,0,video_1
+1,0,../Videos/Test/video_1/utterance_52.mp4,../../videos/blooper/mientras/2802/Clip 3.mp4,utterance_52.mp4,0,video_1
+1,0,../Videos/Test/video_1/utterance_53.mp4,../../videos/blooper/mientras/2102/Clip 3.mp4,utterance_53.mp4,0,video_1
+1,0,../Videos/Test/video_1/utterance_54.mp4,../../videos/blooper/mientras/0703/Clip 3.mp4,utterance_54.mp4,0,video_1
+1,0,../Videos/Test/video_1/utterance_55.mp4,../../videos/blooper/mientras/1103/Clip 2.mp4,utterance_55.mp4,0,video_1
+1,0,../Videos/Test/video_1/utterance_56.mp4,../../videos/blooper/mientras/0804/Clip 25.mp4,utterance_56.mp4,0,video_1
+1,0,../Videos/Test/video_1/utterance_57.mp4,../../videos/blooper/mientras/0804/Clip 51.mp4,utterance_57.mp4,0,video_1
+1,0,../Videos/Test/video_1/utterance_58.mp4,../../videos/blooper/mientras/0804/Clip 46.mp4,utterance_58.mp4,0,video_1
+1,0,../Videos/Test/video_1/utterance_59.mp4,../../videos/blooper/mientras/0804/Clip 9.mp4,utterance_59.mp4,0,video_1
+1,0,../Videos/Test/video_1/utterance_60.mp4,../../videos/blooper/mientras/0804/Clip 24.mp4,utterance_60.mp4,0,video_1
+1,0,../Videos/Test/video_1/utterance_61.mp4,../../videos/blooper/mientras/0804/Clip 49.mp4,utterance_61.mp4,0,video_1
+1,0,../Videos/Test/video_1/utterance_62.mp4,../../videos/blooper/pulso/0101/0101_23.mp4,utterance_62.mp4,0,video_1
+1,0,../Videos/Test/video_1/utterance_63.mp4,../../videos/blooper/pulso/0101/0101_14.mp4,utterance_63.mp4,0,video_1
+1,0,../Videos/Test/video_1/utterance_64.mp4,../../videos/blooper/pulso/0201/0201_6.mp4,utterance_64.mp4,0,video_1
+1,0,../Videos/Test/video_1/utterance_65.mp4,../../videos/blooper/pulso/0201/0201_19.mp4,utterance_65.mp4,0,video_1
